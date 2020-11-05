@@ -47,16 +47,18 @@ jobs:
       - name: Showing goharbor/harbor History
         working-directory: harbor
         run: |
-          pwd
+          echo "====================="
+          echo "====Git fetch all===="
+          git fetch --all
           ls -l
-          ls -l ..
-          echo "Git fetch all tags"
-          git fetch --tags
           
+          echo "====Describe latest tag we are going to build with===="
           git describe --abbrev=0 --tags
+          
+          echo "====What's the news===="          
           git log -n 1
           
-          echo "Git fetch all tags"
-          git tag
+          echo "====================="
+         
     
           
