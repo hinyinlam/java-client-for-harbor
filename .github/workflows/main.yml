@@ -73,7 +73,7 @@ jobs:
           
       - name: Execute OpenAPI Generator
         run: |
-          openapi-generator-cli version
+          ~/bin/openapitools/openapi-generator-cli version
          
     
           
