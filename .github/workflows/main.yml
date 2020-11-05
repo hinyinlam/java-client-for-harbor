@@ -42,6 +42,7 @@ jobs:
       - name: Showing Java SDK Client history
         working-directory: harbor-java-client
         run: |
+          ls -l
           git log
 
       # Runs a set of commands using the runners shell
@@ -49,15 +50,19 @@ jobs:
         working-directory: harbor
         run: |
           echo "====================="
-          ls -l
-          
           echo "====Describe latest tag we are going to build with===="
           git describe --abbrev=0 --tags
           
           echo "====What's the news===="          
           git log -n 1
-          
           echo "====================="
+        
+      - name: Checkout latest release tag and copy swagger definition
+        working-directory: harbor
+        run: |
+          git checkout tags/`git describe --abbrev=0 --tags` -b `git describe --abbrev=0 --tags`
+          cp  api/v2.0/swagger.yaml ../
+          ls ../
          
     
           
