@@ -50,8 +50,13 @@ jobs:
           pwd
           ls -l
           ls -l ..
-          git tag
-          #git describe --abbrev=0 --tags
+          echo "Git fetch all tags"
+          git fetch --tags
+          
+          git describe --abbrev=0 --tags
           git log -n 1
+          
+          echo "Git fetch all tags"
+          git tag
     
           
