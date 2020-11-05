@@ -80,7 +80,16 @@ jobs:
       - name: Generate API SDK using OpenAPI Generator
         run: |
           export PATH=$PATH:~/bin/openapitools/
-          openapi-generator-cli generate -i swagger.yaml -g java --api-package  io.goharbor.api --model-package io.goharbor.model  --package-name io.goharbor -p artifactId=harbor-java-client,groupId=io.goharbor  --output ./generated-java-client/
+          openapi-generator-cli generate -i swagger.yaml -g java --api-package  io.goharbor.api --model-package io.goharbor.model  --package-name io.goharbor -p artifactId=harbor-java-client,groupId=io.goharbor  --output generated-java-client/
+          
+      - name: Package Generated SDK client into Single Jar file
+        working-directory: generated-java-client
+        run: |
+          mkdir -p ../generated-artifact/
+          mvn clean package
+          mv target/harbor-java-client-2.0.jar ../generated-artifacts/
+          ls -l ../generated-artifacts/
+          
          
     
           
