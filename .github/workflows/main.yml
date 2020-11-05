@@ -22,6 +22,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout harbor-java-client repo for generation script
         uses: actions/checkout@v2
+        with:
+          path: harbor-java-client 
       
       - name: Checkout official Harbor repo for swagger.yaml
         uses: actions/checkout@v2
@@ -32,9 +34,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          ls
+          ls -l
           cd harbor
-          ls
+          ls -l
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
