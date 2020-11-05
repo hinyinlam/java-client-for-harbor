@@ -29,7 +29,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: goharbor/harbor 
-          path: harbor  
+          path: harbor
+          fetch-depth: 0   
 
       # Runs a single command using the runners shell
       - name: Showing working directory
@@ -48,8 +49,6 @@ jobs:
         working-directory: harbor
         run: |
           echo "====================="
-          echo "====Git pull all===="
-          git pull --all
           ls -l
           
           echo "====Describe latest tag we are going to build with===="
