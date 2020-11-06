@@ -20,10 +20,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout harbor-java-client repo for generation script
+      - name: Checkout harbor-java-sdk repo for generation script
         uses: actions/checkout@v2
         with:
-          path: harbor-java-client 
+          path: harbor-java-sdk 
       
       - name: Checkout official Harbor repo for swagger.yaml
         uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Showing Java SDK Client history
-        working-directory: harbor-java-client
+        working-directory: harbor-java-sdk
         run: |
           ls -l
           git log
@@ -110,7 +110,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: generated-artifacts/harbor-java-sdk-2.0.jar
-          asset_name: harbor-java-client-2.0.jar
+          asset_name: harbor-java-sdk-2.0.jar
           asset_content_type: application/jar
           
           
