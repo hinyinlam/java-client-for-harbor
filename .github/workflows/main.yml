@@ -20,10 +20,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout harbor-java-sdk repo for generation script
+      - name: Checkout harbor-client-java repo for generation script
         uses: actions/checkout@v2
         with:
-          path: harbor-java-sdk 
+          path: harbor-client-java 
       
       - name: Checkout official Harbor repo for swagger.yaml
         uses: actions/checkout@v2
@@ -39,8 +39,8 @@ jobs:
           ls -l
 
       # Runs a set of commands using the runners shell
-      - name: Showing Java SDK Client history
-        working-directory: harbor-java-sdk
+      - name: Showing Java Client history
+        working-directory: harbor-client-java
         run: |
           ls -l
           git log
@@ -79,13 +79,13 @@ jobs:
           export PATH=$PATH:~/bin/openapitools/
           openapi-generator-cli version
           
-      - name: Generate API SDK using OpenAPI Generator
+      - name: Generate API Client using OpenAPI Generator
         run: |
           export PATH=$PATH:~/bin/openapitools/
-          openapi-generator-cli generate -i swagger.yaml -g java --api-package  io.goharbor.sdk.apis --model-package io.goharbor.sdk.models -p artifactId=harbor-java-sdk,groupId=io.goharbor  --output harbor-java-sdk/
+          openapi-generator-cli generate -i swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor  --output harbor-client-java/
           
-      - name: Package Generated SDK client into Single Jar file
-        working-directory: harbor-java-sdk
+      - name: Package Generated client into Single Jar file
+        working-directory: harbor-client-java
         run: |
           mkdir -p ../generated-artifacts/
           mvn clean package
@@ -102,47 +102,47 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Upload SDK Release 1
+      - name: Upload Client Release 1
         id: upload-release-asset1 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: generated-artifacts/harbor-java-sdk-2.0.jar
-          asset_name: harbor-java-sdk-2.0.jar
+          asset_path: generated-artifacts/client-java-2.0.jar
+          asset_name: client-java-2.0.jar
           asset_content_type: application/jar
           
           
-      - name: Upload SDK Release 2
+      - name: Upload Client Release 2
         id: upload-release-asset2 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: generated-artifacts/harbor-java-sdk-2.0-sources.jar
-          asset_name: harbor-java-sdk-2.0-sources.jar
+          asset_path: generated-artifacts/client-java-2.0-sources.jar
+          asset_name: client-java-2.0-sources.jar
           asset_content_type: application/jar
          
-      - name: Upload SDK Release 3
+      - name: Upload Client Release 3
         id: upload-release-asset3 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: generated-artifacts/harbor-java-sdk-2.0-javadoc.jar
-          asset_name: harbor-java-sdk-2.0-javadoc.jar
+          asset_path: generated-artifacts/client-java-2.0-javadoc.jar
+          asset_name: client-java-2.0-javadoc.jar
           asset_content_type: application/jar
         
-      - name: Upload SDK Release 4
+      - name: Upload Client Release 4
         id: upload-release-asset4
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: generated-artifacts/harbor-java-sdk-2.0-tests.jar
-          asset_name: harbor-java-sdk-2.0-tests.jar
+          asset_path: generated-artifacts/client-java-2.0-tests.jar
+          asset_name: client-java-2.0-tests.jar
           asset_content_type: application/jar    
