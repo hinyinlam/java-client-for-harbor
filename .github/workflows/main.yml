@@ -53,7 +53,7 @@ jobs:
           echo "====Describe latest tag we are going to build with===="
           export ON_GIT_TAG="$(git describe --abbrev=0 --tags)"
           echo Tag to work on: ${ON_GIT_TAG}
-          echo "::set-env name=ON_GIT_TAG::$ON_GIT_TAG"
+          echo "ON_GIT_TAG=$ON_GIT_TAG" >> $GITHUB_ENV
           
           echo "====What's the news===="          
           git log -n 1
@@ -98,7 +98,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${ ON_GIT_TAG }
+          release_name: Release ${ON_GIT_TAG}
           draft: false
           prerelease: false
           
