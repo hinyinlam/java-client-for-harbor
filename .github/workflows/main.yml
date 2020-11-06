@@ -102,8 +102,8 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Upload SDK Release
-        id: upload-release-asset 
+      - name: Upload SDK Release 1
+        id: upload-release-asset1 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -112,6 +112,37 @@ jobs:
           asset_path: generated-artifacts/harbor-java-client-2.0.jar
           asset_name: harbor-java-client-2.0.jar
           asset_content_type: application/jar
-         
-    
           
+          
+      - name: Upload SDK Release 2
+        id: upload-release-asset2 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: generated-artifacts/harbor-java-client-2.0-sources.jar
+          asset_name: harbor-java-client-2.0-sources.jar
+          asset_content_type: application/jar
+         
+      - name: Upload SDK Release 3
+        id: upload-release-asset3 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: generated-artifacts/harbor-java-client-2.0-javadoc.jar
+          asset_name: harbor-java-client-2.0-javadoc.jar
+          asset_content_type: application/jar
+        
+      - name: Upload SDK Release 4
+        id: upload-release-asset4
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: generated-artifacts/harbor-java-client-2.0-tests.jar
+          asset_name: harbor-java-client-2.0-tests.jar
+          asset_content_type: application/jar    
