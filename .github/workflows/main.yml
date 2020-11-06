@@ -51,18 +51,18 @@ jobs:
         run: |
           echo "====================="
           echo "====Describe latest tag we are going to build with===="
-          echo ${ON_GIT_TAG}
+          export ON_GIT_TAG="$(git describe --abbrev=0 --tags)"
+          echo Tag to work on: ${ON_GIT_TAG}
+          echo "::set-env name=ON_GIT_TAG::$ON_GIT_TAG"
           
           echo "====What's the news===="          
           git log -n 1
           echo "====================="
-        env:
-          ON_GIT_TAG: $(git describe --abbrev=0 --tags)
         
       - name: Checkout latest release tag and copy swagger definition
         working-directory: harbor
         run: |
-          git checkout tags/`git describe --abbrev=0 --tags` -b `git describe --abbrev=0 --tags`
+          git checkout tags/${ON_GIT_TAG} -b ${ON_GIT_TAG}
           cp  api/v2.0/swagger.yaml ../
           ls ../
           
