@@ -11,4 +11,4 @@ Download the `client-java.jar`
 `mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=client-java-2.0.jar -DpomFile=META-INF/maven/io.goharbor/client-java/pom.xml`
 
 #Example
-Available in 
+Available in `example` module
