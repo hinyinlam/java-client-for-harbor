@@ -88,6 +88,7 @@ jobs:
         working-directory: harbor-client-java
         run: |
           mkdir -p ../generated-artifacts/
+          patch pom.xml.patch
           mvn clean package
           mv -v target/*.jar ../generated-artifacts/
           
