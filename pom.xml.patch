@@ -1,0 +1,10 @@
+--- pom.xml	2021-01-04 14:08:52.000000000 +0800
++++ pom-withparameters.xml	2021-01-04 14:04:43.000000000 +0800
+@@ -44,6 +44,7 @@
+                     <compilerArgs>
+                         <arg>-Xlint:all</arg>
+                         <arg>-J-Xss4m</arg><!-- Compiling the generated JSON.java file may require larger stack size. -->
++                        <arg>-parameters</arg>
+                     </compilerArgs>
+                 </configuration>
+             </plugin>
