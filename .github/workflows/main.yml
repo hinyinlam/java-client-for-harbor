@@ -82,7 +82,7 @@ jobs:
       - name: Generate API Client using OpenAPI Generator
         run: |
           export PATH=$PATH:~/bin/openapitools/
-          openapi-generator-cli generate -i swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor  --output harbor-client-java/
+          openapi-generator-cli generate -i swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0 --output harbor-client-java/
           
       - name: Package Generated client into Single Jar file
         working-directory: harbor-client-java
