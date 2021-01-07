@@ -108,7 +108,7 @@ jobs:
           mv -v target/*.jar ../generated-artifacts/
 
       - name: Showing what artifacts it has generated
-          run: |
+        run: |
             ls -la ../generated-artifacts/
 
       - name: Create Release
