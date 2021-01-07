@@ -86,10 +86,10 @@ jobs:
           export PATH=$PATH:~/bin/openapitools/
           openapi-generator-cli generate -i swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0 --output harbor-client-java/
 
-      - name: Generate API Client with LEGACY version of legacy-swagger.yaml using OpenAPI Generator
+      - name: Generate API Client with LEGACY version of legacy_swagger.yaml using OpenAPI Generator
         run: |
           export PATH=$PATH:~/bin/openapitools/
-          openapi-generator-cli generate -i legacy-swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0-legacy --output harbor-client-java-legacy/
+          openapi-generator-cli generate -i legacy_swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0-legacy --output harbor-client-java-legacy/
 
       - name: Package Generated client (NEW Swagger) into Single Jar file
         working-directory: harbor-client-java
