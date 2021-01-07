@@ -9,6 +9,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: {}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -59,11 +60,12 @@ jobs:
           git log -n 1
           echo "====================="
         
-      - name: Checkout latest release tag and copy swagger definition
+      - name: Checkout latest release tag and copy both new and legacy swagger definition
         working-directory: harbor
         run: |
           git checkout tags/${ON_GIT_TAG} -b ${ON_GIT_TAG}
           cp  api/v2.0/swagger.yaml ../
+          cp  api/v2.0/legacy_swagger.yaml ../
           ls ../
           
       - name: Download and install OpenAPIGenerator
@@ -79,19 +81,36 @@ jobs:
           export PATH=$PATH:~/bin/openapitools/
           openapi-generator-cli version
           
-      - name: Generate API Client using OpenAPI Generator
+      - name: Generate API Client with NEW version of Swagger.yaml using OpenAPI Generator
         run: |
           export PATH=$PATH:~/bin/openapitools/
           openapi-generator-cli generate -i swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0 --output harbor-client-java/
-          
-      - name: Package Generated client into Single Jar file
+
+      - name: Generate API Client with LEGACY version of legacy-swagger.yaml using OpenAPI Generator
+        run: |
+          export PATH=$PATH:~/bin/openapitools/
+          openapi-generator-cli generate -i legacy-swagger.yaml -g java --api-package io.goharbor.client.openapi.apis --model-package io.goharbor.client.openapi.models -p artifactId=client-java,groupId=io.goharbor -p artifactVersion=2.0-legacy --output harbor-client-java-legacy/
+
+      - name: Package Generated client (NEW Swagger) into Single Jar file
         working-directory: harbor-client-java
         run: |
           mkdir -p ../generated-artifacts/
           patch pom.xml.patch
           mvn clean package
           mv -v target/*.jar ../generated-artifacts/
-          
+
+      - name: Package Generated client (Legacy Swagger) into Single Jar file
+        working-directory: harbor-client-java-legacy
+        run: |
+          mkdir -p ../generated-artifacts/
+          patch pom.xml.patch
+          mvn clean package
+          mv -v target/*.jar ../generated-artifacts/
+
+      - name: Showing what artifacts it has generated
+          run: |
+            ls -la ../generated-artifacts/
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -103,8 +122,8 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Upload Client Release 1
-        id: upload-release-asset1 
+      - name: Upload Client Release Library Jar (New Swagger)
+        id: upload-release-asset-lib-jar-new-swagger
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -113,10 +132,9 @@ jobs:
           asset_path: generated-artifacts/client-java-2.0.jar
           asset_name: client-java-2.0.jar
           asset_content_type: application/jar
-          
-          
-      - name: Upload Client Release 2
-        id: upload-release-asset2 
+
+      - name: Upload Client Release Source Jar (New Swagger)
+        id: upload-release-asset-src-jar-new-swagger
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,8 +144,8 @@ jobs:
           asset_name: client-java-2.0-sources.jar
           asset_content_type: application/jar
          
-      - name: Upload Client Release 3
-        id: upload-release-asset3 
+      - name: Upload Client Release Java Doc Jar (New Swagger)
+        id: upload-release-asset-doc-jar-new-swagger
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -137,8 +155,8 @@ jobs:
           asset_name: client-java-2.0-javadoc.jar
           asset_content_type: application/jar
         
-      - name: Upload Client Release 4
-        id: upload-release-asset4
+      - name: Upload Client Release Test Jar (New Swagger)
+        id: upload-release-asset-test-jar-new-swagger
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -147,3 +165,49 @@ jobs:
           asset_path: generated-artifacts/client-java-2.0-tests.jar
           asset_name: client-java-2.0-tests.jar
           asset_content_type: application/jar    
+
+#####Legacy Jar upload:
+
+  - name: Upload Client Release Library Jar (Legacy Swagger)
+      id: upload-release-asset-lib-jar-legacy-swagger
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: generated-artifacts/client-java-2.0-legacy.jar
+        asset_name: client-java-2.0-legacy.jar
+        asset_content_type: application/jar
+
+      - name: Upload Client Release Source Jar (Legacy Swagger)
+        id: upload-release-asset-src-jar-legacy-swagger
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: generated-artifacts/client-java-2.0-legacy-sources.jar
+          asset_name: client-java-2.0-legacy-sources.jar
+          asset_content_type: application/jar
+
+      - name: Upload Client Release Java Doc Jar (Legacy Swagger)
+        id: upload-release-asset-doc-jar-legacy-swagger
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: generated-artifacts/client-java-2.0-legacy-javadoc.jar
+          asset_name: client-java-2.0-legacy-javadoc.jar
+          asset_content_type: application/jar
+
+      - name: Upload Client Release Test Jar (Legacy Swagger)
+        id: upload-release-asset-test-jar-legacy-swagger
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: generated-artifacts/client-java-2.0-legacy-tests.jar
+          asset_name: client-java-2.0-legacy-tests.jar
+          asset_content_type: application/jar
