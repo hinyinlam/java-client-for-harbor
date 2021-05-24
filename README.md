@@ -1,8 +1,8 @@
-# harbor-client-java ![CI](https://github.com/hinyinlam-pivotal/harbor-client-java/workflows/CI/badge.svg)
+# Java Client for Harbor ![CI](https://github.com/hinyinlam-pivotal/java-client-for-harbor/workflows/CI/badge.svg)
 Java Client for Harbor open source trusted cloud native registry  https://github.com/goharbor/harbor
 
 # How to mvn install to your local repo?
-Go to release page: https://github.com/hinyinlam-pivotal/harbor-client-java/releases
+Go to release page: https://github.com/hinyinlam-pivotal/java-client-for-harbor/releases
 
 Download the `client-java.jar`
 
